@@ -155,6 +155,12 @@ class PoEPath(object):
         """
         paths = PoEPathList(only_existing)
 
+        if sys.platform == 'darwin':
+            paths.append(
+                os.path.expanduser('~/.wine/drive_c/Program Files/Grinding Gear Games/Path of Exile'),
+                VERSION.ALL, DISTRIBUTOR.GGG
+            )
+
         # Currently PoE only runs on windows
         if sys.platform != 'win32':
             return paths
@@ -162,10 +168,10 @@ class PoEPath(object):
         # TODO: Possibly find a way to reduce this spaghetti like code
         if self.distributor & DISTRIBUTOR.GGG:
             for item in (
-                ('Software\GrindingGearGames\Path of Exile', VERSION.STABLE),
-                ('Software\GrindingGearGames\Path of Exile - The Awakening '
+                (r'Software\GrindingGearGames\Path of Exile', VERSION.STABLE),
+                (r'Software\GrindingGearGames\Path of Exile - The Awakening '
                  'Closed Beta', VERSION.BETA),
-                ('Software\GrindingGearGames\Path of Exile - Alpha',
+                (r'Software\GrindingGearGames\Path of Exile - Alpha',
                  VERSION.ALPHA)
             ):
                 if self.version & item[1]:
@@ -173,7 +179,7 @@ class PoEPath(object):
                     paths.append(basepath, item[1], DISTRIBUTOR.GGG)
 
         if self.distributor & DISTRIBUTOR.STEAM:
-            basepath = self._get_winreg_path('Software\Valve\Steam', 'SteamPath')
+            basepath = self._get_winreg_path(r'Software\Valve\Steam', 'SteamPath')
             # Steam does have a beta, but it is installed into the same directory
             # AFAIK, there is no safe way to determine which is installed
             # unless we hook into steam
@@ -187,7 +193,7 @@ class PoEPath(object):
         if self.distributor & DISTRIBUTOR.GARENA:
             if self.version & VERSION.STABLE:
                 basepath = self._get_winreg_path(
-                    'SOFTWARE\Wow6432Node\Garena\PoE',
+                    r'SOFTWARE\Wow6432Node\Garena\PoE',
                     'Path',
                     user=False
                 )

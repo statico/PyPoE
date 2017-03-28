@@ -1055,7 +1055,8 @@ if __name__ == '__main__':
         profiler.add_function(record.read)'''
 
     ggpk = GGPKFile()
-    ggpk.read(r'C:\Games\Path of Exile\Content.ggpk')
+    ggpk.read(os.path.expanduser('~/.wine/drive_c/Program Files/Grinding Gear Games/Path of Exile/Content.ggpk'))
+    #ggpk.read(r'C:\Games\Path of Exile\Content.ggpk')
     ggpk.directory_build()
     print(ggpk['Metadata/Items/Rings/AbstractRing.ot'].get_path())
     #profiler.run("ggpk.read()")
